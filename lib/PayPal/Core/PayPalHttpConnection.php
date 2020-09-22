@@ -145,6 +145,16 @@ class PayPalHttpConnection
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getHttpHeaders());
 
+        /**
+         * SSL certificate problem: unable to get local issuer certificate
+         * update by carolsail 2020.09.22
+         */
+        $protocol = substr($this->httpConfig->getUrl(), 0, 5);
+        if ('https' == $protocol) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
+
         //Determine Curl Options based on Method
         switch ($this->httpConfig->getMethod()) {
             case 'POST':
